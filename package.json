@@ -1,0 +1,36 @@
+{
+  "name": "kalkulyator",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Офлайн-калькулятор приёмки семян подсолнечника",
+  "main": "electron/main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test tests/*.test.cjs",
+    "dist:win": "electron-builder --win portable --x64"
+  },
+  "devDependencies": {
+    "electron": "^35.0.0",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "ru.fraktum.kalkulyator",
+    "productName": "Kalkulyator",
+    "asar": true,
+    "files": [
+      "index.html",
+      "app.js",
+      "calculator.js",
+      "styles.css",
+      "electron/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": ["portable"],
+      "artifactName": "Kalkulyator-${version}-Windows.exe"
+    }
+  }
+}
