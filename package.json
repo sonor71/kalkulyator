@@ -11,7 +11,8 @@
   },
   "devDependencies": {
     "electron": "^35.0.0",
-    "electron-builder": "^26.0.12"
+    "electron-builder": "^26.0.12",
+    "jsdom": "^26.1.0"
   },
   "build": {
     "appId": "ru.fraktum.kalkulyator",
@@ -29,7 +30,9 @@
       "output": "dist"
     },
     "win": {
-      "target": ["portable"],
+      "target": [
+        "portable"
+      ],
       "artifactName": "Kalkulyator-${version}-Windows.exe"
     }
   }
