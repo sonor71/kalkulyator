@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Kalkulyator — приёмка семян</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-icon">✳</div><div><strong>Kalkulyator</strong><small>Приёмка семян</small></div></div>
+    <div class="nav-caption">РАБОЧЕЕ ПРОСТРАНСТВО</div>
+    <nav class="navigation" aria-label="Главное меню">
+      <button class="nav-link active" data-view="calculator"><span class="nav-icon">▦</span> Расчёт партии</button>
+      <button class="nav-link" data-view="history"><span class="nav-icon">▤</span> Журнал расчётов <span id="history-count" class="nav-counter">0</span></button>
+      <button class="nav-link" data-view="settings"><span class="nav-icon">⚙</span> Настройки качества</button>
+    </nav>
+    <div class="sidebar-bottom"><div class="offline-dot"></div><span>Работает без интернета</span><small>Данные хранятся на этом устройстве</small></div>
+  </aside>
+  <div class="content">
+    <header class="topbar">
+      <div><div class="breadcrumb">УЧЁТ И КОНТРОЛЬ КАЧЕСТВА</div><h1 id="page-title">Расчёт партии</h1></div>
+      <div class="top-actions"><span class="header-date" id="today-label"></span><button class="btn btn-secondary" id="go-settings">⚙ Правила расчёта</button></div>
+    </header>
+    <main>
+      <section id="view-calculator" class="view">
+        <div class="hero">
+          <div><span class="eyebrow">НОВЫЙ РАСЧЁТ</span><h2>Зачётный вес семян <span>за пару секунд</span></h2><p>Введите физический вес и пять лабораторных показателей. Скидка рассчитывается по установленным правилам автоматически.</p></div>
+          <div class="hero-symbol" aria-hidden="true">✺</div>
+        </div>
+        <div class="workspace">
+          <div class="workspace-left">
+            <div class="panel">
+              <div class="panel-heading"><div><span class="step">01</span><h3>Информация о партии</h3></div><span class="soft-tag">Исходные данные</span></div>
+              <div class="fields cols-2">
+                <label>Поставщик / хозяйство<input id="supplier" type="text" maxlength="100" placeholder="Например, ООО Урожай" autocomplete="off"></label>
+                <label>Номер партии<input id="batch-number" type="text" maxlength="60" placeholder="Например, П-001" autocomplete="off"></label>
+                <label>Дата приёмки<input id="batch-date" type="date"></label>
+                <label>Физический вес, кг <em>*</em><div class="unit-input"><input id="weight" inputmode="decimal" type="text" placeholder="100" autocomplete="off"><span>кг</span></div></label>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="panel-heading"><div><span class="step">02</span><h3>Лабораторные показатели</h3></div><span id="fields-progress" class="soft-tag">0 из 5</span></div>
+              <p class="panel-description">Числа можно вводить с точкой или запятой. Каждая скидка видна отдельно.</p>
+              <div id="metric-inputs" class="metric-inputs"></div>
+              <div class="helper">Нет правила для показателя? <button class="inline-link" id="edit-rules">Настроить интервалы и ставки →</button></div>
+            </div>
+          </div>
+          <div class="workspace-right">
+            <div class="result-panel">
+              <div class="result-top"><span class="eyebrow">РЕЗУЛЬТАТ РАСЧЁТА</span><span id="status-chip" class="status-chip">Ожидает данных</span></div>
+              <div class="big-result" id="final-weight">—<small>кг</small></div>
+              <div class="result-caption">Итоговый зачётный вес</div>
+              <div class="result-divider"></div>
+              <div class="stats-grid">
+                <div><span>Физический вес</span><strong id="physical-weight">—</strong></div>
+                <div><span>Общая скидка</span><strong id="discount">—</strong></div>
+              </div>
+              <div class="result-divider"></div>
+              <h4>Детализация по показателям</h4>
+              <div id="result-lines" class="result-lines"></div>
+              <div id="result-message" class="result-message info" role="status">Заполните поля слева, чтобы увидеть результат.</div>
+              <div class="result-actions"><button class="btn btn-primary" id="save-batch" disabled>＋ Сохранить расчёт</button><button class="btn btn-outline" id="print-batch" disabled>Печать</button></div>
+            </div>
+            <div class="under-card"><span>ⓘ</span><p><strong>Как считается скидка?</strong> Проценты по отдельным показателям складываются, затем суммарная скидка вычитается из физического веса партии.</p></div>
+            <button class="reset-link" id="reset-form">↻ Очистить поля и начать заново</button>
+          </div>
+        </div>
+      </section>
+      <section id="view-history" class="view" hidden>
+        <div class="section-heading"><div><h2>Журнал расчётов</h2><p>Сохранённые партии на этом компьютере.</p></div><div class="action-group"><button id="export-csv" class="btn btn-secondary">↓ Экспорт CSV</button><button id="backup-json" class="btn btn-secondary">↓ Резервная копия</button><button id="import-json" class="btn btn-secondary">↑ Восстановить</button><input type="file" id="import-file" accept=".json,application/json" hidden></div></div>
+        <div class="panel history-panel"><div class="table-scroll"><table><thead><tr><th>Дата</th><th>Партия / поставщик</th><th>Физ. вес</th><th>Скидка</th><th>Зачётный вес</th><th>Действия</th></tr></thead><tbody id="history-rows"></tbody></table></div><div id="empty-history" class="empty-state" hidden><div>▤</div><h3>Расчётов пока нет</h3><p>Результаты появятся здесь после сохранения первой партии.</p><button class="btn btn-primary" data-view="calculator">Создать расчёт</button></div></div>
+      </section>
+      <section id="view-settings" class="view" hidden>
+        <div class="section-heading"><div><h2>Правила оценки качества</h2><p>Пять показателей, индивидуальные интервалы приёмки и ставки скидок.</p></div><div class="action-group"><button id="restore-defaults" class="btn btn-secondary">↻ Заводские настройки</button><button id="save-settings" class="btn btn-primary">Сохранить правила</button></div></div>
+        <div class="notice"><strong>Принцип расчёта</strong><p>Внутри коридора без скидки начисление равно нулю. За каждый полный или дробный шаг за пределами коридора применяется ставка соответствующего интервала. Укажите границы последовательно; пустая крайняя граница означает «без ограничения».</p></div>
+        <div id="settings-editor" class="settings-editor"></div>
+      </section>
+    </main>
+  </div>
+</div>
+<div id="print-sheet" aria-hidden="true"></div>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<script src="calculator.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
